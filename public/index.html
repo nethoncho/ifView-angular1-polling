@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html ng-app="ifViewApp">
+
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.14/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.0/spin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/1.6.0/moment.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.css" rel="stylesheet">
+
+  <script src="js/browserApp.js"></script>
+  <script src="js/bps.js"></script>
+  <script src="js/getCounters.js"></script>
+  <script src="js/ifView.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interface Viewer</title>
+</head>
+
+<body ng-controller="ifViewCtrl">
+  <nav class="navbar navbar-default navbar-static-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <span class="navbar-brand">ifView</span>
+      </div>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div class="panel panel-default">
+      <div class="panel-heading">Device configuration</div>
+      <form ng-submit="processForm()" class="form-horizontal" role="form">
+        <div class="form-group">
+          <label for="inputIp" class="col-sm-2 control-label">Device IP:</label>
+          <div class="col-sm-10">
+            <input type="text" name="inputIP" class="form-control" placeholder="Specify SNMP Device's IP Address" ng-model="formData.snmpIp">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputCommunity" class="col-sm-2 control-label">Community:</label>
+          <div class="col-sm-10">
+            <input type="text" name="inputCommunity" class="form-control" placeholder="specify SNMP device's Community" ng-model="formData.snmpCommunity">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputVersion" class="col-sm-2 control-label">Version:</label>
+          <div class="col-sm-10">
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" ng-model="formData.snmpVersion" btn-radio="'1'">Version 1</button>
+              <button type="button" class="btn btn-primary" ng-model="formData.snmpVersion" btn-radio="'2'">Version 2</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary" ng-hide="queryInprogress">Query Device</button>
+            <button class="btn" ng-show="queryInprogress">In Progress</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="panel panel-info" ng-show="device.name">
+      <div class="panel-heading">Device: {{device.name}}</div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-1"><strong>Location:</strong></div>
+          <div class="col-md-11">{{device.location}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-1"><strong>Contact:</strong></div>
+          <div class="col-md-11">{{device.contact}}</div>
+        </div>
+      </div>
+      <div id="interfaceTable">
+
+      </div>
+      <table class="table table-bordered table-striped table-condensed">
+        <thead>
+          <tr>
+            <th class="hidden-xs">Index:</th>
+            <th>Description:</th>
+            <th ng-show="device.intefaces[0].ifAlias || device.intefaces[0].ifAlias === ''">Alias:</th>
+            <th class="hidden-xs">Speed:</th>
+            <th>Input BPS <br/> last 60S:</th>
+            <th>Output BPS<br/> last 60S:</th>
+            <th class="hidden-xs">status:</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="inteface in device.intefaces" ng-class="interfaceRowClass(inteface.ifOperStatus)">
+            <td class="hidden-xs">{{inteface.Index}}</td>
+            <td>{{inteface.ifDescr}}</td>
+            <td ng-show="device.intefaces[0].ifAlias || device.intefaces[0].ifAlias === ''">{{inteface.ifAlias}}</td>
+            <td class="hidden-xs">{{inteface.ifSpeed | toBPS}}</td>
+            <td align="right">{{device.intefaces[$index].aveInboundBps | toBPS}}</td>
+            <td align="right">{{device.intefaces[$index].aveOutboundBps | toBPS}}</td>
+            <td class="hidden-xs">
+              <span ng-switch on="inteface.ifOperStatus">
+                <div ng-switch-when="1">Up</div>
+                <div ng-switch-when="2">Down</div>
+                <div ng-switch-when="3">Testing</div>
+                <div ng-switch-when="4">Unknown</div>
+                <div ng-switch-when="5">Dormant</div>
+                <div ng-switch-when="6">Not Present</div>
+                <div ng-switch-when="7">Lower Layer Down</div>
+                <div ng-switch-default>{{inteface.ifOperStatus}}</div>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Panel -->
+    <div>
+      <alert ng-repeat="alert in alerts" type="alert.type">{{alert.msg}}</alert>
+    </div>
+  </div>
+  <!-- container -->
+</body>
+
+</html>

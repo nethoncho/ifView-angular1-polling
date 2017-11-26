@@ -1,0 +1,35 @@
+{
+  "name": "ifview-angular1-polling",
+  "version": "0.9.1",
+  "description": "A snmp interface viewer using angular1 with http polling",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nethoncho/ifView-angular1-polling.git"
+  },
+  "keywords": [
+    "angular1"
+  ],
+  "author": "Ben Adams <nethoncho@gmail.com>",
+  "contributors": [
+    {
+      "name": "John Hendrix",
+      "email": "jhendrix58@gmail.com",
+      "url": "https://github.com/Buto"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nethoncho/ifView-angular1-polling/issues"
+  },
+  "homepage": "https://github.com/nethoncho/ifView-angular1-polling#readme",
+  "dependencies": {
+    "express": "^3.4.8",
+    "moment": "^2.11.2",
+    "net-snmp": "^1.2.0",
+    "underscore": "^1.6.0"
+  }
+}
