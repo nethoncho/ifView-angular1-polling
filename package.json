@@ -1,6 +1,6 @@
 {
   "name": "ifview-angular1-polling",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "A snmp interface viewer using angular1 with http polling",
   "main": "app.js",
   "scripts": {
